@@ -1,0 +1,20 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model IELTS_Scores {
+  id            Int      @id @default(autoincrement())
+  date          DateTime @default(now())
+  essay_content String
+  band_score    String
+  feedback_json String
+}
