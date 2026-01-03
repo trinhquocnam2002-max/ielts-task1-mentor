@@ -7,8 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL") // Confirmed for Vercel
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model IELTS_Scores {
@@ -17,4 +17,12 @@ model IELTS_Scores {
   essay_content String
   band_score    String
   feedback_json String
+}
+
+model EssayHistory {
+  id        String   @id @default(cuid())
+  essayText String
+  bandScore String
+  feedback  String
+  createdAt DateTime @default(now())
 }

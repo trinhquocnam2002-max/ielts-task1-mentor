@@ -35,6 +35,16 @@ export async function POST(req: Request) {
                     feedback_json: JSON.stringify([jsonResponse.feedback]), // Wrap in array to match old major_errors format mostly, or just stringify the whole thing
                 },
             });
+
+            // New: Save to EssayHistory for the specific History page
+            await db.essayHistory.create({
+                data: {
+                    essayText: content,
+                    bandScore: String(jsonResponse.overall_score), // Regex if strictly needed, but AI returns clean usually
+                    feedback: JSON.stringify(jsonResponse), // Store full analysis for history
+                }
+            });
+
         } catch (dbError) {
             console.error("Failed to save to database:", dbError);
         }
