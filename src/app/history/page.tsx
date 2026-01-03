@@ -1,6 +1,8 @@
 
 import { db } from "@/lib/db";
 import Link from "next/link";
+import HistoryChart from "@/components/HistoryChart";
+import { EssayHistory } from "@prisma/client";
 
 // Force dynamic rendering to ensure we always get the latest history
 export const dynamic = "force-dynamic";
@@ -12,6 +14,13 @@ export default async function HistoryPage() {
             createdAt: "desc",
         },
     });
+
+    // Transform data for the chart
+    const chartData = history.map((item: EssayHistory) => ({
+        date: new Date(item.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' }),
+        score: parseFloat(item.bandScore),
+        fullDate: new Date(item.createdAt).toLocaleString(),
+    }));
 
     return (
         <div className="min-h-screen bg-gray-50 p-8 font-sans text-gray-800">
@@ -38,7 +47,9 @@ export default async function HistoryPage() {
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {history.map((item) => {
+                        <HistoryChart data={chartData} />
+
+                        {history.map((item: EssayHistory) => {
                             // Try to parse feedback if it's JSON, otherwise use as is
                             let feedbackObj: any = {};
                             try {
